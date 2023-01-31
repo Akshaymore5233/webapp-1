@@ -8,14 +8,6 @@
   <name>WebApp Maven Webapp</name>
   <url>http://maven.apache.org</url>
   <dependencies>
-    
-    <!-- https://mvnrepository.com/artifact/org.apache.maven/maven-plugin-api -->
-<dependency>
-    <groupId>org.apache.maven</groupId>
-    <artifactId>maven-plugin-api</artifactId>
-    <version>2.0.2</version>
-</dependency>
-    
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
@@ -24,6 +16,57 @@
     </dependency>
   </dependencies>
   <build>
+    
     <finalName>WebApp</finalName>
-  </build>
+    
+        <plugins>
+            <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>1.3</version>
+                <configuration>
+                    <skip>${skipGulp}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>install node and yarn</id>
+                        <goals>
+                            <goal>install-node-and-yarn</goal>
+                        </goals>
+                        <configuration>
+                            <nodeVersion>${project.frontend.nodeVersion}</nodeVersion>
+                            <yarnVersion>${project.frontend.yarnVersion}</yarnVersion>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>yarn install</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+            <configuration>
+              <failOnError>false</failOnError>
+            </configuration>
+                    </execution>
+          <execution>
+            <id>fix node-sass package</id>
+            <goals>
+              <goal>npm</goal>
+            </goals>
+            <configuration>
+              <arguments>rebuild node-sass</arguments>
+            </configuration>
+          </execution>
+                    <execution>
+                        <id>yarn</id>
+                        <goals>
+                            <goal>yarn</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run ${build.args}</arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
